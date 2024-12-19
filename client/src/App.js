@@ -1,4 +1,56 @@
 import { useState } from "react";
+import { gql, useQuery, useMutation } from "@apollo/client";
+
+const GET_TASKS = gql`
+  query GetTasks {
+    getTasks {
+      _id
+      title
+      status
+    }
+  }
+`;
+
+const CREATE_TASK = gql`
+  mutation CreateTask(
+    $title: String!
+    $description: String!
+    $status: String!
+  ) {
+    createTask(title: $title, description: $description, status: $status) {
+      _id
+    }
+  }
+`;
+
+export const UPDATE_TASK = gql`
+  mutation UpdateTask(
+    $_id: ID!
+    $title: String
+    $description: String
+    $status: String
+  ) {
+    updateTask(
+      _id: $_id
+      title: $title
+      description: $description
+      status: $status
+    ) {
+      _id
+      title
+      description
+      status
+    }
+  }
+`;
+
+export const DELETE_TASK = gql`
+  mutation DeleteTask($_id: ID!) {
+    deleteTask(_id: $_id) {
+      _id
+    }
+  }
+`;
 
 // Queries
 // eg https://www.apollographql.com/docs/react/data/queries/
@@ -21,13 +73,28 @@ function App() {
   const [status, setStatus] = useState("Pending");
   const [currentTaskId, setCurrentTaskId] = useState(null);
 
+  const {
+    data: queryData,
+    error: queryError,
+    loading: queryLoading,
+    refetch,
+  } = useQuery(GET_TASKS);
+
+  const [createTask, { data, loading, error }] = useMutation(CREATE_TASK, {
+    onCompleted: () => {
+      refetch();
+    },
+  });
+
+  console.log(data);
+
   // Create or Update Task
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (currentTaskId) {
       // graphql call to update
     } else {
-      // grphql call to create
+      createTask({ variables: { title, description, status } });
     }
     setTitle("");
     setDescription("");
@@ -48,6 +115,12 @@ function App() {
   const handleDelete = async (id) => {
     // grpahql deelte
   };
+
+  if (queryLoading) return "Loading...";
+
+  if (error) return `Error! ${error.message}`;
+
+  if (queryError) return `Error! ${error.message}`;
 
   return (
     <div className="App">
@@ -72,6 +145,7 @@ function App() {
         <br></br>
         <button type="submit">
           {currentTaskId ? "Update Task" : "Create Task"}
+          {loading ? "..." : ""}
         </button>
       </form>
 
@@ -85,7 +159,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {tasks.map((task) => (
+          {queryData.getTasks.map((task) => (
             <tr key={task.id}>
               <td>{task.title}</td>
               <td>{task.description}</td>

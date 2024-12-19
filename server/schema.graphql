@@ -1,25 +1,17 @@
-# In schema.grpahql file you define the type for your model, query, and mutations
-# for eg. check documentaion https://graphql.org/learn/schema/
-# Basic Example.
-# User Type Definition
-
-type User {
-  _id: ID! # Unique identifier for each user
-  name: String! # Name of the user
-  email: String! # Email address of the user (assuming unique)
-  age: Int # Age of the user (optional)
-  role: String! # User role, e.g., 'admin', 'user', etc.
+type Task {
+  _id: ID!
+  title: String!
+  description: String!
+  status: String!
 }
 
-## Query for getting users and a single user by ID
-# type Query {
-#   getUsers: [User]              # Get all users
-#   getUser(id: ID!): User        # Get a single user by their ID
-# }
+type Query {
+  getTasks: [Task]
+  getTask(id: ID!): Task
+}
 
-# # Mutations for creating, updating, and deleting a user
-# type Mutation {
-#   createUser(name: String!, email: String!, age: Int, role: String!): User  # Create a new user
-#   updateUser(id: ID!, name: String, email: String, age: Int, role: String): User  # Update an existing user
-#   deleteUser(id: ID!): User      # Delete a user by their ID
-# }
+type Mutation {
+  createTask(title: String!, description: String!, status: String!): Task
+  updateTask(id: ID!, title: String, description: String, status: String): Task
+  deleteTask(id: ID!): Task
+}
