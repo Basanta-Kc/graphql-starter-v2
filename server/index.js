@@ -29,7 +29,7 @@ const startServer = async () => {
   await server.start();
   app.use("/graphql", cors(), express.json(), expressMiddleware(server));
 
-  await mongoose.connect("mongodb://localhost:27017/mern-todo");
+  await mongoose.connect("mongodb://localhost:27017/mern-5-graph-todo");
 
   const PORT = process.env.PORT || 4000;
   httpServer.listen(PORT, () => {
