@@ -3,15 +3,13 @@ const Task = require("./model/task");
 // Create function called getTasks, and getTask in query
 // hint Model.find(), Model.findById()
 // app.get('/tasks/:id', getTasks)
+
+// app.post('/task', creatTask)
 const resolvers = {
   Query: {
     getTasks: async () => {
       const tasks = await Task.find();
-      return tasks;
-    },
-    getTask: async (_, { id }) => {
-      const task = await Task.findById(id);
-      return task;
+      return tasks; // [task]
     },
   },
   // create mutation function called createTask, updateTask and deleteTask

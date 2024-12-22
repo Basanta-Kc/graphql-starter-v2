@@ -24,6 +24,8 @@
 #   deleteUser(id: ID!): User      # Delete a user by their ID
 # }
 
+# GET /task  => list of task  => [ {}, {}, {}]
+
 type Task {
   _id: ID!
   title: String!
@@ -33,18 +35,15 @@ type Task {
 
 type Query {
   getTasks: [Task]
-  getTask(id: ID!): Task
 }
 
 type Mutation {
-  createTask(title: String!, description: String!, status: String!): Task
-  deleteTask(id: ID!): Task
   updateTask(
     id: ID!
     title: String!
     description: String!
     status: String!
   ): Task
+  createTask(title: String!, description: String!, status: String!): Task
+  deleteTask(id: ID!): Task
 }
-
-# GET /task  => list of task  => [ {}, {}, {}]
